@@ -1,5 +1,5 @@
 # release_file_test
 
-+ A
++ Z
 + B
 + C
