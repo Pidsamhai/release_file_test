@@ -1,0 +1,32 @@
+name: 🚀 Build Apk     .
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    name: Ci
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Generate Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v2.0.0
+        with:
+          configuration: "config/config.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: upload apk
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: "${{steps.github_release.outputs.changelog}}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
